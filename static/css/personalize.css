@@ -1,0 +1,259 @@
+/* General Form Container */
+.personalize-form-container {
+    background-color: #fdf8f1;
+    padding: 16px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Titles */
+  .step-title, .subtitle {
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    color: #23231e;
+  }
+  
+  .step-title {
+    font-size: 1.5rem;
+  }
+  
+  .subtitle {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+  
+  /* Labels */
+  .label {
+    font-size: 1.4rem;
+    color: #23231e;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  
+  /* Input Field */
+  .input-field {
+    width: 100%;
+    max-width: 544px;
+    padding: 1.3rem;
+    border: 2px solid #bdbdbb;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 1.6rem;
+  }
+  
+  /* Gender Selection Buttons */
+  .gender-selection {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 16px;
+    width: 544px;
+  }
+  
+  .gender-btn {
+    padding: 8px 16px;
+    font-size: 1.7rem;
+    background-color: #fdf8f1;
+    border: 2px solid #bdbdbb;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .gender-btn.active {
+    border-color: #1e5751;
+    background-color: #1e5751;
+    color: #fff;
+  }
+  
+  /* Character Selection Grid */
+  .character-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+    max-width: 544px;
+    width: 100%;
+  }
+  
+  .character-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #bdbdbb;
+    padding: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .character-option:hover {
+    border-color: #1e5751;
+  }
+  
+  .character-option.selected {
+    outline: 3px solid #1e5751;
+  }
+  
+  .character-img {
+    width: 148px;
+    height: auto;
+  }
+  
+  /* Continue Button */
+  .continue-btn {
+    background-color: #23231E;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .continue-btn:hover {
+    background-color: #14473d;
+  }
+  
+  /* Back to Product Page Link */
+  .back-to-product-page {
+    color: #7b7b78;
+    margin-top: 16px;
+    margin-bottom: 24px;
+    font-size: 1.7rem;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+  
+  .back-to-product-page:hover {
+    text-decoration: none;
+  }
+  
+  /* Header */
+  .personalize-header {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4.5rem;
+    position: relative;
+    padding: 0 1rem;
+  }
+  
+  .header-title {
+    font-size: 1.5rem;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .header-close {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+  }
+  
+  .header-close svg {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  /* Autocomplete */
+  .autocomplete {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+  
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #bdbdbb;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+  }
+  
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #bdbdbb;
+  }
+  
+  .autocomplete-items div:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .autocomplete-active {
+    background-color: #1e5751 !important;
+    color: #ffffff;
+  }
+  
+  /* Validation Icon */
+  .validation-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.8rem;
+    pointer-events: none;
+  }
+  
+  .validation-icon.valid {
+    color: green;
+  }
+  
+  .validation-icon.invalid {
+    color: red;
+  }
+  
+  /* Responsive Design */
+  @media (min-width: 48rem) {
+    .personalize-form-container {
+      max-width: 600px;
+    }
+  
+    .character-selection-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  
+    .gender-btn {
+      padding: 12px 20px;
+      width: 100%;
+    }
+  
+    .continue-btn {
+      font-size: 1.7rem;
+      width: 544px;
+    }
+  }
+  
+  @media (max-width: 48rem) {
+    .header-title {
+      font-size: 1.2rem;
+    }
+  
+    .header-close {
+      right: 0.5rem;
+    }
+  
+    .header-close svg {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+  

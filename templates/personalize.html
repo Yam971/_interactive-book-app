@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Personalize Your Book</title>
   <!-- Link to the external CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/personalize.css') }}">
@@ -13,7 +13,7 @@
     <span class="header-title">When You Were Born</span>
     <button class="header-close" id="close-button">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"></path>
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
       </svg>
     </button>
   </div>
@@ -29,8 +29,17 @@
         <!-- First Name Field with Autocomplete and Validation Icon -->
         <label for="child-name" class="label">First name</label>
         <div class="autocomplete">
-          <input type="text" name="child_name" id="child-name" class="input-field" required>
-          <span id="name-validation-icon" class="validation-icon"></span>
+          <input 
+            type="text" 
+            name="child_name" 
+            id="child-name" 
+            class="input-field" 
+            required
+          >
+          <span 
+            id="name-validation-icon" 
+            class="validation-icon"
+          ></span>
         </div>
 
         <!-- Gender Selection -->
@@ -45,7 +54,11 @@
           <!-- Character Options -->
           {% for i in ['i', 'ii', 'iii', 'iv', 'v', 'vi'] %}
           <div class="character-option" data-character="{{ i }}">
-            <img src="{{ url_for('static', filename='images/girl_type-' ~ i ~ '.png') }}" alt="Character {{ i }}" class="character-img">
+            <img 
+              src="{{ url_for('static', filename='images/girl_type-' ~ i ~ '.png') }}" 
+              alt="Character {{ i }}" 
+              class="character-img"
+            >
           </div>
           {% endfor %}
         </div>
@@ -58,7 +71,13 @@
         <button type="submit" class="continue-btn">Continue</button>
         
         <!-- Back to Product Page Link -->
-        <a id="back-to-product-link" class="back-to-product-page" href="/">← Back to the product page</a>
+        <a 
+          id="back-to-product-link" 
+          class="back-to-product-page" 
+          href="/"
+        >
+          ← Back to the product page
+        </a>
       </form>
     </div>
   </div>

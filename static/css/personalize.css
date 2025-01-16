@@ -3,9 +3,10 @@ body {
     background-color: #fdf8f1;
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', sans-serif; /* Global font family */
 }
 
-/* General Form Container */
+/* Container for the entire form */
 .personalize-form-container {
     background-color: #fdf8f1;
     padding: 16px;
@@ -14,24 +15,24 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
 }
 
-/* Titles */
-.step-title, .subtitle {
-    text-align: center;
-    font-family: 'Segoe UI', sans-serif;
-    color: #23231e;
-    margin: 0;
-    padding: 0;
-}
-
+/* Title Styles */
 .step-title {
+    /* Now less bold */
+    font-weight: normal; /* or 400 to reduce the boldness */
     font-size: 1.4rem;
+    margin: 0;
     margin-bottom: 0.5rem;
+    color: #23231e;
 }
 
 .subtitle {
     font-size: 2rem;
+    text-align: center;
+    color: #23231e;
+    margin: 0;
     margin-bottom: 16px;
 }
 
@@ -47,7 +48,7 @@ body {
 /* Input Field */
 .input-field {
     width: 100%;
-    max-width: 544px;
+    max-width: 544px;             /* Control the max width here */
     padding: 1.2rem;
     border: 2px solid #bdbdbb;
     border-radius: 4px;
@@ -56,28 +57,26 @@ body {
     box-sizing: border-box;
 }
 
-/* Gender Selection Buttons */
+/* Gender Selection Container */
 .gender-selection {
     display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-    margin-bottom: 16px;
+    max-width: 544px;             /* Match the .input-field’s max-width */
     width: 100%;
-    max-width: 544px;
+    margin: 0 auto 16px;          /* Center the container horizontally, add bottom margin */
     box-sizing: border-box;
+    gap: 8px;                     /* Small space between buttons */
 }
 
+/* Gender Buttons */
 .gender-btn {
-    padding: 10px 16px;
+    flex: 1;                      /* Each button takes equal space within the container */
+    text-align: center;
+    padding: 1.2rem;
     font-size: 1.4rem;
     background-color: #fdf8f1;
     border: 2px solid #bdbdbb;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex: 1; /* Let them stretch in smaller screens */
-    min-width: 100px; /* Prevent them from becoming too small */
-    text-align: center;
 }
 
 .gender-btn.active {
@@ -89,7 +88,7 @@ body {
 /* Character Selection Grid */
 .character-selection-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
     gap: 16px;
     margin-bottom: 16px;
     max-width: 544px;
@@ -132,6 +131,7 @@ body {
     width: 100%;
     max-width: 544px;
     box-sizing: border-box;
+    margin: 0 auto;
 }
 
 .continue-btn:hover {
@@ -169,7 +169,6 @@ body {
 
 .header-title {
     font-size: 1.4rem;
-    font-family: 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -259,13 +258,8 @@ footer {
     padding: 10px 0;
 }
 
-/* Responsive Design */
-/* For screens 768px (48rem) and up */
+/* Responsive Design: 768px (48rem) and up */
 @media (min-width: 48rem) {
-    .personalize-form-container {
-        max-width: 600px;
-    }
-
     .step-title {
         font-size: 1.5rem;
     }
@@ -276,9 +270,6 @@ footer {
 
     .gender-btn {
         font-size: 1.7rem;
-        padding: 12px 20px;
-        flex: none; /* Prevent them from automatically stretching on larger screens */
-        width: 100%;
     }
 
     .continue-btn {

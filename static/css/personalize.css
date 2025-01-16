@@ -1,3 +1,8 @@
+/* General Background */
+body {
+    background-color: #fdf8f1;
+}
+
 /* General Form Container */
 .personalize-form-container {
     background-color: #fdf8f1;
@@ -7,34 +12,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  /* Titles */
-  .step-title, .subtitle {
+}
+
+/* Titles */
+.step-title, .subtitle {
     text-align: center;
     font-family: 'Segoe UI', sans-serif;
     color: #23231e;
-  }
-  
-  .step-title {
+}
+
+.step-title {
     font-size: 1.5rem;
-  }
-  
-  .subtitle {
+}
+
+.subtitle {
     font-size: 2.5rem;
     margin-bottom: 16px;
-  }
-  
-  /* Labels */
-  .label {
+}
+
+/* Labels */
+.label {
     font-size: 1.4rem;
     color: #23231e;
     margin-bottom: 8px;
     font-weight: 700;
-  }
-  
-  /* Input Field */
-  .input-field {
+}
+
+/* Input Field */
+.input-field {
     width: 100%;
     max-width: 544px;
     padding: 1.3rem;
@@ -42,66 +47,66 @@
     border-radius: 4px;
     margin-bottom: 16px;
     font-size: 1.6rem;
-  }
-  
-  /* Gender Selection Buttons */
-  .gender-selection {
+}
+
+/* Gender Selection Buttons */
+.gender-selection {
     display: flex;
     gap: 16px;
     justify-content: center;
     margin-bottom: 16px;
     width: 544px;
-  }
-  
-  .gender-btn {
+}
+
+.gender-btn {
     padding: 8px 16px;
     font-size: 1.7rem;
     background-color: #fdf8f1;
     border: 2px solid #bdbdbb;
     cursor: pointer;
     transition: all 0.2s ease;
-  }
-  
-  .gender-btn.active {
+}
+
+.gender-btn.active {
     border-color: #1e5751;
     background-color: #1e5751;
     color: #fff;
-  }
-  
-  /* Character Selection Grid */
-  .character-selection-grid {
+}
+
+/* Character Selection Grid */
+.character-selection-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     margin-bottom: 16px;
     max-width: 544px;
     width: 100%;
-  }
-  
-  .character-option {
+}
+
+.character-option {
     display: flex;
     justify-content: center;
     align-items: center;
     border: 2px solid #bdbdbb;
     padding: 8px;
     transition: all 0.2s ease;
-  }
-  
-  .character-option:hover {
+}
+
+.character-option:hover {
     border-color: #1e5751;
-  }
-  
-  .character-option.selected {
+}
+
+.character-option.selected {
     outline: 3px solid #1e5751;
-  }
-  
-  .character-img {
+}
+
+.character-img {
     width: 148px;
     height: auto;
-  }
-  
-  /* Continue Button */
-  .continue-btn {
+}
+
+/* Continue Button */
+.continue-btn {
     background-color: #23231E;
     color: white;
     padding: 12px 24px;
@@ -109,14 +114,14 @@
     font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-  }
-  
-  .continue-btn:hover {
+}
+
+.continue-btn:hover {
     background-color: #14473d;
-  }
-  
-  /* Back to Product Page Link */
-  .back-to-product-page {
+}
+
+/* Back to Product Page Link */
+.back-to-product-page {
     color: #7b7b78;
     margin-top: 16px;
     margin-bottom: 24px;
@@ -124,14 +129,14 @@
     text-decoration: none;
     display: block;
     text-align: center;
-  }
-  
-  .back-to-product-page:hover {
+}
+
+.back-to-product-page:hover {
     text-decoration: none;
-  }
-  
-  /* Header */
-  .personalize-header {
+}
+
+/* Header */
+.personalize-header {
     width: 100%;
     background-color: #000;
     color: #fff;
@@ -141,14 +146,14 @@
     height: 4.5rem;
     position: relative;
     padding: 0 1rem;
-  }
-  
-  .header-title {
+}
+
+.header-title {
     font-size: 1.5rem;
     font-family: 'Segoe UI', sans-serif;
-  }
-  
-  .header-close {
+}
+
+.header-close {
     position: absolute;
     right: 1rem;
     background: none;
@@ -160,21 +165,21 @@
     justify-content: center;
     width: 5rem;
     height: 5rem;
-  }
-  
-  .header-close svg {
+}
+
+.header-close svg {
     width: 2.5rem;
     height: 2.5rem;
-  }
-  
-  /* Autocomplete */
-  .autocomplete {
+}
+
+/* Autocomplete */
+.autocomplete {
     position: relative;
     display: inline-block;
     width: 100%;
-  }
-  
-  .autocomplete-items {
+}
+
+.autocomplete-items {
     position: absolute;
     border: 1px solid #bdbdbb;
     border-bottom: none;
@@ -186,74 +191,82 @@
     max-height: 200px;
     overflow-y: auto;
     background-color: #fff;
-  }
-  
-  .autocomplete-items div {
+}
+
+.autocomplete-items div {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #bdbdbb;
-  }
-  
-  .autocomplete-items div:hover {
+}
+
+.autocomplete-items div:hover {
     background-color: #f1f1f1;
-  }
-  
-  .autocomplete-active {
+}
+
+.autocomplete-active {
     background-color: #1e5751 !important;
     color: #ffffff;
-  }
-  
-  /* Validation Icon */
-  .validation-icon {
+}
+
+/* Validation Icon */
+.validation-icon {
     position: absolute;
     right: 16px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 1.8rem;
     pointer-events: none;
-  }
-  
-  .validation-icon.valid {
+}
+
+.validation-icon.valid {
     color: green;
-  }
-  
-  .validation-icon.invalid {
+}
+
+.validation-icon.invalid {
     color: red;
-  }
-  
-  /* Responsive Design */
-  @media (min-width: 48rem) {
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    margin-top: 0;
+    padding: 10px 0;
+}
+
+/* Responsive Design */
+@media (min-width: 48rem) {
     .personalize-form-container {
-      max-width: 600px;
+        max-width: 600px;
     }
-  
+
     .character-selection-grid {
-      grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
-  
+
     .gender-btn {
-      padding: 12px 20px;
-      width: 100%;
+        padding: 12px 20px;
+        width: 100%;
     }
-  
+
     .continue-btn {
-      font-size: 1.7rem;
-      width: 544px;
+        font-size: 1.7rem;
+        width: 544px;
     }
-  }
-  
-  @media (max-width: 48rem) {
+}
+
+@media (max-width: 48rem) {
     .header-title {
-      font-size: 1.2rem;
+        font-size: 1.2rem;
     }
-  
+
     .header-close {
-      right: 0.5rem;
+        right: 0.5rem;
     }
-  
+
     .header-close svg {
-      width: 1.2rem;
-      height: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
     }
-  }
-  
+}

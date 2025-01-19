@@ -1,0 +1,40 @@
+<!-- templates/preview.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Preview Your Book</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/personalize.css') }}">
+</head>
+<body>
+  <div class="personalize-header">
+    <span class="header-title">When You Were Born</span>
+    <button class="header-close" id="close-button">
+      <!-- SVG removed for brevity -->
+    </button>
+  </div>
+
+  <div class="personalize-form-section">
+    <div class="personalize-form-container">
+      <h2 class="step-title" style="font-weight: normal;">Step 2 of 3</h2>
+      <h3 class="subtitle">Let’s see how your book looks</h3>
+
+      <p>Child's Name: {{ child_name }}</p>
+      <p>Gender: {{ gender }}</p>
+      <p>Character: {{ character }}</p>
+
+      {% if preview_filename %}
+        <p>Here is the newly generated background image:</p>
+        <img src="{{ url_for('serve_preview_image', filename=preview_filename) }}"
+             alt="Preview image"
+             style="max-width: 300px; border: 1px solid #ccc;">
+      {% endif %}
+    </div>
+  </div>
+
+  <footer>
+    <p class="footer-text">© 2025 WhataRead. All rights reserved.</p>
+  </footer>
+</body>
+</html>

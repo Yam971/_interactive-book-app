@@ -12,6 +12,10 @@
   
       "new_background": "monet_V0_8/assets/girl_type_i/dynamic/final-background-spread/Background.png",
       "new_letters": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters",
+      
+      "letters_normal": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters",
+      "letters_small": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters/small",
+
       "new_output": "monet_V0_8/generated-preview"
     },
   
@@ -23,14 +27,17 @@
       "5": 50,
       "6": 45,
       "7": 20,
-      "8": 10,
-      "9": 10,
-      "10": 10,
-      "11": 10,
+      "8": 60,
+      "9": 50,
+      "10": 30,
+      "11": 20,
       "12": 10
     },
   
   
-    "default_letter_spacing_px": 0
+    "default_letter_spacing_px": 0,
+
+    "filename_suffix_small": "_small"
+
   }
   

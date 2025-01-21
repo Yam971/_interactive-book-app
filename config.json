@@ -1,0 +1,20 @@
+{
+    "use_new_monet": true,
+  
+    "monet_v0_7_module": "monet.Monet_V0_7",
+    "monet_v0_8_module": "monet_V0_8.Monet_V0_8",
+  
+    "paths": {
+      "old_background": "monet/assets/girl_type_i/dynamic/final-background-spread/Background.png",
+      "old_letters": "monet/assets/girl_type_i/dynamic/transparent-letters/4-letters",
+      "old_output": "monet/generated-preview",
+  
+      "new_background": "monet_V0_8/assets/girl_type_i/dynamic/final-background-spread/Background.png",
+      "new_letters": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters",
+      "new_output": "monet_V0_8/generated-preview"
+    },
+  
+    "letter_spacing_px": 0,
+    "top_alignment_y": 0
+  }
+  

@@ -1,34 +1,57 @@
-<!-- templates/preview.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Preview Your Book</title>
+  <!-- Link to the external CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/personalize.css') }}">
+  <style>
+    /* Add a small style override for the preview fields to reduce spacing */
+    .preview-field {
+      margin: 0.3em 0; /* Tweak as needed */
+      font-weight: normal; /* We'll set the label itself in <strong> */
+    }
+    .preview-field strong {
+      font-weight: 700; /* Bold for the label text */
+    }
+  </style>
 </head>
 <body>
+  <!-- Header -->
   <div class="personalize-header">
     <span class="header-title">When You Were Born</span>
     <button class="header-close" id="close-button">
-      <!-- SVG removed for brevity -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
+      </svg>
     </button>
   </div>
 
+  <!-- Main Section -->
   <div class="personalize-form-section">
     <div class="personalize-form-container">
       <h2 class="step-title" style="font-weight: normal;">Step 2 of 3</h2>
       <h3 class="subtitle">Let’s see how your book looks</h3>
 
-      <p>Child's Name: {{ child_name }}</p>
-      <p>Gender: {{ gender }}</p>
-      <p>Character: {{ character }}</p>
+      <!-- Display the data we received from the form, with reduced spacing and bold labels -->
+      <p class="preview-field"><strong>Child's Name:</strong> {{ child_name }}</p>
+      <p class="preview-field"><strong>Gender:</strong> {{ gender }}</p>
+      <p class="preview-field"><strong>Character:</strong> {{ character }}</p>
+
+      <!-- New field: Nb of letters -->
+      <p class="preview-field"><strong>Nb of letters:</strong> {{ nb_letters }}</p>
+
+      <!-- New field: Monet version -->
+      <p class="preview-field"><strong>Monet version:</strong> {{ monet_version }}</p>
 
       {% if preview_filename %}
-        <p>Here is the newly generated background image:</p>
-        <img src="{{ url_for('serve_preview_image', filename=preview_filename) }}"
-             alt="Preview image"
-             style="max-width: 700px; border: 1px solid #ccc;">
+        <p class="preview-field">Here is the newly generated background image:</p>
+        <img 
+          class="generated-preview-img" 
+          src="{{ url_for('serve_preview_image', filename=preview_filename) }}" 
+          alt="Preview image"
+        >
       {% endif %}
     </div>
   </div>

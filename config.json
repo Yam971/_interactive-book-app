@@ -1,43 +1,39 @@
+{
+  "use_new_monet": true,
 
-  {
-    "use_new_monet": true,
-  
-    "monet_v0_7_module": "monet.Monet_V0_7",
-    "monet_v0_8_module": "monet_V0_8.Monet_V0_8",
-  
-    "paths": {
-      "old_background": "monet/assets/girl_type_i/dynamic/final-background-spread/Background.png",
-      "old_letters": "monet/assets/girl_type_i/dynamic/transparent-letters/4-letters",
-      "old_output": "monet/generated-preview",
-  
-      "new_background": "monet_V0_8/assets/girl_type_i/dynamic/final-background-spread/Background.png",
-      "new_letters": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters",
-      
-      "letters_normal": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters",
-      "letters_small": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters/small",
+  "monet_v0_7_module": "monet.Monet_V0_7",
+  "monet_v0_8_module": "monet_V0_8.Monet_V0_8",
 
-      "new_output": "monet_V0_8/generated-preview"
-    },
-  
- 
-    "letter_spacing_per_length": {
-      "2": 70,
-      "3": 70,
-      "4": 70,
-      "5": 50,
-      "6": 45,
-      "7": 20,
-      "8": 60,
-      "9": 50,
-      "10": 30,
-      "11": 20,
-      "12": 10
-    },
-  
-  
-    "default_letter_spacing_px": 0,
+  "paths": {
+    "old_background": "monet/assets/girl_type_i/dynamic/final-background-spread/Background.png",
+    "old_letters": "monet/assets/girl_type_i/dynamic/transparent-letters/4-letters",
+    "old_output": "monet/generated-preview",
 
-    "filename_suffix_small": "_small"
+    "new_background": "monet_V0_8/assets/girl_type_i/dynamic/final-background-spread/Background.png",
+    "new_letters": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters",
+    
+    "letters_normal": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters",
+    "letters_small": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters/small",
 
-  }
-  
+    "new_output": "monet_V0_8/generated-preview"
+  },
+
+  "letter_spacing_per_length": {
+    "2": 70,
+    "3": 70,
+    "4": 70,
+    "5": 50,
+    "6": 45,
+    "7": 20,
+    "8": 60,
+    "9": 50,
+    "10": 30,
+    "11": 20,
+    "12": 10
+  },
+
+  "default_letter_spacing_px": 0,
+  "filename_suffix_small": "_small",
+
+  "branch": "08.5" 
+}

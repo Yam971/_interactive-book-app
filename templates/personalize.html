@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Personalize Your Book</title>
+
+  <!-- Favicon -->
+  <link 
+    rel="icon" 
+    href="{{ url_for('static', filename='images/whataread-favicon.png') }}" 
+    type="image/png"
+  >
+
   <!-- Link to the external CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/personalize.css') }}">
 </head>
@@ -26,7 +34,7 @@
 
       <!-- Personalization Form -->
       <form id="personalization-form">
-        <!-- First Name Field with Autocomplete and Validation Icon -->
+        <!-- First Name Field -->
         <label for="child-name" class="label">First name</label>
         <div class="autocomplete">
           <input 
@@ -49,9 +57,8 @@
           <button type="button" id="girl" class="gender-btn">Girl</button>
         </div>
 
-        <!-- Character Selection (Use images as buttons) -->
+        <!-- Character Selection -->
         <div class="character-selection-grid">
-          <!-- Character Options -->
           {% for i in ['i', 'ii', 'iii', 'iv', 'v', 'vi'] %}
           <div class="character-option" data-character="{{ i }}">
             <img 
@@ -63,7 +70,7 @@
           {% endfor %}
         </div>
 
-        <!-- Hidden Fields to Capture Data -->
+        <!-- Hidden Fields -->
         <input type="hidden" name="gender" id="gender-id">
         <input type="hidden" name="character" id="character-id">
 
@@ -86,7 +93,14 @@
   <script src="{{ url_for('static', filename='js/personalize.js') }}"></script>
 
   <footer>
+    <div class="footer-content">
+      <img 
+        src="{{ url_for('static', filename='images/whataread-footer-logo.png') }}" 
+        alt="WhataRead Logo" 
+        class="footer-logo"
+      >
       <p class="footer-text">© 2025 WhataRead. All rights reserved.</p>
+    </div>
   </footer>
 </body>
 </html>

@@ -18,10 +18,17 @@ body {
     box-sizing: border-box;
 }
 
+.generated-preview-img {
+    max-width: 800px; /* fixed max width on desktop */
+    width: 100%;      /* scale down on smaller screens */
+    height: auto;     /* maintain aspect ratio */
+    display: block;
+    margin: 0 auto;   /* center the image */
+}
+
 /* Title Styles */
 .step-title {
-    /* Now less bold */
-    font-weight: normal; /* or 400 to reduce the boldness */
+    font-weight: normal;
     font-size: 1.4rem;
     margin: 0;
     margin-bottom: 0.5rem;
@@ -48,7 +55,7 @@ body {
 /* Input Field */
 .input-field {
     width: 100%;
-    max-width: 544px;             /* Control the max width here */
+    max-width: 544px;
     padding: 1.2rem;
     border: 2px solid #bdbdbb;
     border-radius: 4px;
@@ -60,16 +67,16 @@ body {
 /* Gender Selection Container */
 .gender-selection {
     display: flex;
-    max-width: 544px;             /* Match the .input-field’s max-width */
+    max-width: 544px;
     width: 100%;
-    margin: 0 auto 16px;          /* Center the container horizontally, add bottom margin */
+    margin: 0 auto 16px;
     box-sizing: border-box;
-    gap: 8px;                     /* Small space between buttons */
+    gap: 8px;
 }
 
 /* Gender Buttons */
 .gender-btn {
-    flex: 1;                      /* Each button takes equal space within the container */
+    flex: 1;
     text-align: center;
     padding: 1.2rem;
     font-size: 1.4rem;
@@ -88,7 +95,7 @@ body {
 /* Character Selection Grid */
 .character-selection-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     margin-bottom: 16px;
     max-width: 544px;
@@ -251,47 +258,72 @@ body {
 
 /* Footer */
 footer {
-    text-align: center;
-    font-size: 12px;
-    color: #555;
-    margin-top: 0;
-    padding: 10px 0;
+    background-color: #fdf8f1;
+    padding: 1rem 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Responsive Design: 768px (48rem) and up */
+/* Footer content container */
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    /* By default, align horizontally. We'll override in media queries for mobile. */
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.footer-logo {
+    width: 30px;
+    height: 30px;
+}
+
+.footer-text {
+    font-size: 12px;
+    color: #555;
+    margin: 0;
+}
+
+/* Responsive for bigger screens */
 @media (min-width: 48rem) {
     .step-title {
         font-size: 1.5rem;
     }
-
     .subtitle {
         font-size: 2.5rem;
     }
-
     .gender-btn {
         font-size: 1.7rem;
     }
-
     .continue-btn {
         font-size: 1.7rem;
         width: 544px;
     }
-
     .character-selection-grid {
         grid-template-columns: repeat(3, 1fr);
     }
-
     .header-title {
         font-size: 1.5rem;
     }
-
     .header-close {
         width: 5rem;
         height: 5rem;
     }
-
     .header-close svg {
         width: 2.5rem;
         height: 2.5rem;
+    }
+}
+
+/* Mobile layout: center the logo below the text. 
+   We'll assume "mobile" is < 48rem (~768px) in this example. */
+@media (max-width: 47.99rem) {
+    .footer-content {
+        flex-direction: column; /* stack them vertically */
+    }
+    .footer-logo {
+        margin-top: 1rem;
     }
 }

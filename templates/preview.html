@@ -4,25 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Preview Your Book</title>
+
+  <!-- Favicon -->
+  <link 
+    rel="icon" 
+    href="{{ url_for('static', filename='images/whataread-favicon.png') }}" 
+    type="image/png"
+  >
+
   <!-- Link to the external CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/personalize.css') }}">
-  <style>
-    /* Additional override for the generated preview image */
-    .generated-preview-img {
-      max-width: 800px; /* fixed max width on desktop */
-      width: 100%;      /* scales down on smaller viewports */
-      height: auto;     /* maintain aspect ratio */
-      display: block;
-      margin: 0 auto;
-    }
-    .preview-field {
-      margin: 0.3em 0;
-      font-weight: normal;
-    }
-    .preview-field strong {
-      font-weight: 700;
-    }
-  </style>
 </head>
 <body>
   <!-- Header -->
@@ -42,18 +33,10 @@
       <h3 class="subtitle">Let’s see how your book looks</h3>
 
       <!-- Display the data -->
-      <p class="preview-field">
-        <strong>Child's Name:</strong> {{ child_name }}
-      </p>
-      <p class="preview-field">
-        <strong>Gender:</strong> {{ gender }}
-      </p>
-      <p class="preview-field">
-        <strong>Character:</strong> {{ character }}
-      </p>
-      <p class="preview-field">
-        <strong>Nb of letters:</strong> {{ nb_letters }}
-      </p>
+      <p class="preview-field"><strong>Child's Name:</strong> {{ child_name }}</p>
+      <p class="preview-field"><strong>Gender:</strong> {{ gender }}</p>
+      <p class="preview-field"><strong>Character:</strong> {{ character }}</p>
+      <p class="preview-field"><strong>Nb of letters:</strong> {{ nb_letters }}</p>
       <p class="preview-field">
         <strong>Monet version:</strong> {{ monet_version }} 
         <strong>Branch:</strong> {{ branch_version }}
@@ -71,7 +54,14 @@
   </div>
 
   <footer>
-    <p class="footer-text">© 2025 WhataRead. All rights reserved.</p>
+    <div class="footer-content">
+      <img 
+        src="{{ url_for('static', filename='images/whataread-footer-logo.png') }}" 
+        alt="WhataRead Logo" 
+        class="footer-logo"
+      >
+      <p class="footer-text">© 2025 WhataRead. All rights reserved.</p>
+    </div>
   </footer>
 </body>
 </html>

@@ -55,7 +55,7 @@ body {
 /* Input Field */
 .input-field {
     width: 100%;
-    max-width: 544px;
+    max-width: 544px;  /* Control the max width here */
     padding: 1.2rem;
     border: 2px solid #bdbdbb;
     border-radius: 4px;

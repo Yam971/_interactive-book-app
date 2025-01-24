@@ -18,7 +18,7 @@
 <body>
   <!-- Header -->
   <div class="personalize-header">
-    <span class="header-title">{{ child_name }}’s First Safari🦁</span>
+    <span class="header-title">{{ child_name }}’s Preview</span>
     <button class="header-close" id="close-button">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
@@ -38,16 +38,27 @@
       <p class="preview-field"><strong>Character:</strong> {{ character }}</p>
       <p class="preview-field"><strong>Nb of letters:</strong> {{ nb_letters }}</p>
       <p class="preview-field">
-        <strong>Monet version:</strong> {{ monet_version }} 
+        <strong>Current Version:</strong> {{ monet_version }} 
         <strong>Branch:</strong> {{ branch_version }}
       </p>
 
-      {% if preview_filename %}
-        <p class="preview-field">Here is the newly generated background image:</p>
+      <!-- If Renoir image is generated, show it first -->
+      {% if renoir_filename %}
+        <p class="preview-field">Renoir image:</p>
         <img 
           class="generated-preview-img" 
-          src="{{ url_for('serve_preview_image', filename=preview_filename) }}" 
-          alt="Preview image"
+          src="{{ url_for('serve_preview_image', filename=renoir_filename) }}" 
+          alt="Renoir preview image"
+        >
+      {% endif %}
+
+      <!-- If Monet image is generated, show it second -->
+      {% if monet_filename %}
+        <p class="preview-field">Monet image:</p>
+        <img 
+          class="generated-preview-img" 
+          src="{{ url_for('serve_preview_image', filename=monet_filename) }}" 
+          alt="Monet preview image"
         >
       {% endif %}
     </div>

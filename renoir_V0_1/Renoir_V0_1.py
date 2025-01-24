@@ -4,13 +4,9 @@ from PIL import Image
 
 def generate_background_image(child_name, config):
     """
-    Generates 'Background_<child_name>.png' by overlaying letter images
-    onto the background. Features include:
-      - Dynamic letter spacing per name length (2..12)
-      - Two sets of letters: normal (length 2..7) vs. small (length 8..12)
-      - Variation cycling for repeated letters (E.png, E1.png, E2.png, etc.)
-      - Hyphenated names (e.g., 'Jean-Luc'), counting the hyphen as a character
-        and using hyphen.png / hyphen_small.png as needed.
+    Generates 'Renoir_<child_name>.png' by overlaying letter images
+    onto a background. It's a perfect copy of Monet's logic, with paths
+    referencing renoir_V0_1 instead of monet_V0_8.
     """
 
     # 1) Determine the name length (including hyphens)
@@ -21,40 +17,43 @@ def generate_background_image(child_name, config):
     # 8..12 => small
     # outside that => default to normal
     if 2 <= name_length <= 7:
-        letters_folder_key = "letters_normal"
+        letters_folder_key = "renoir_letters_normal"
         suffix_small = ""
     elif 8 <= name_length <= 12:
-        letters_folder_key = "letters_small"
+        letters_folder_key = "renoir_letters_small"
         suffix_small = config.get("filename_suffix_small", "_small")
     else:
-        letters_folder_key = "letters_normal"
+        letters_folder_key = "renoir_letters_normal"
         suffix_small = ""
 
     # 2) Build paths from config
+    #   Note: Because __file__ = <...>/renoir_V0_1/Renoir_V0_1.py
+    #   we can simply join without .replace(), if we set the config path
+    #   as "renoir_V0_1/assets/..." – that already starts from this script's folder.
     background_path = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["new_background"].replace("monet_V0_8/", "")
+        config["paths"]["renoir_background"].replace("renoir_V0_1/", "")
     )
 
     letters_folder = os.path.join(
         os.path.dirname(__file__),
-        config["paths"][letters_folder_key].replace("monet_V0_8/", "")
+        config["paths"][letters_folder_key].replace("renoir_V0_1/", "")
     )
 
     output_folder = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["new_output"].replace("monet_V0_8/", "")
+        config["paths"]["renoir_output"].replace("renoir_V0_1/", "")
     )
 
-    # Make sure output folder exists
+    # Ensure output folder exists
     os.makedirs(output_folder, exist_ok=True)
 
     # 3) Load background
     background = Image.open(background_path).convert("RGBA")
     bg_width, bg_height = background.size
 
-    # Convert child's name into a list of characters
-    letters_in_name = list(child_name)  # includes hyphens if present
+    # Convert child's name into a list of characters (including hyphens)
+    letters_in_name = list(child_name)
     if not letters_in_name:
         print("[Warning] Child name is empty, nothing to generate.")
         return
@@ -64,31 +63,19 @@ def generate_background_image(child_name, config):
     default_spacing = config.get("default_letter_spacing_px", 0)
     letter_spacing = spacing_dict.get(str(name_length), default_spacing)
 
-    # 5) Variation logic
-    # We'll collect images for each character in the name, possibly cycling variations.
-    # Hyphen => "hyphen.png" or "hyphen_small.png"
-    # Letters => e.g. E.png, E1.png, E_small.png, E1_small.png, etc.
-
+    # 5) Variation logic (same as Monet)
     variations_cache = {}
 
     def get_variations_for_char(char: str):
-        """
-        Returns the list of valid image paths for the given character,
-        applying the suffix for 'small' if needed.
-        """
-        # If it's a hyphen, treat it as 'hyphen' as the base name
+        """Returns a list of valid image paths for the given character."""
+        # If it's a hyphen, treat it as 'hyphen'
         if char == '-':
             base_char = 'hyphen'
         else:
-            # For letters, uppercase them (e.g., 'E')
             base_char = char.upper()
 
-        # Example filenames: 
-        #   E.png, E1.png (normal)
-        #   E_small.png, E1_small.png (small)
-        #   hyphen.png, hyphen_small.png
-        # We'll handle them with a regex that checks for optional digits 
-        # between the base_char and suffix_small, e.g. E1_small
+        # Use regex to find possible variations:
+        #   E.png, E1.png, E_small.png, E1_small.png, etc.
         pattern_without_digits = rf"^{re.escape(base_char)}{suffix_small}\.png$"
         pattern_with_digits   = rf"^{re.escape(base_char)}(\d+){re.escape(suffix_small)}\.png$"
 
@@ -97,11 +84,11 @@ def generate_background_image(child_name, config):
             if re.match(pattern_without_digits, filename) or re.match(pattern_with_digits, filename):
                 valid_files.append(filename)
 
-        valid_files.sort()  # E.png < E1.png < E2.png, or hyphen.png < hyphen1.png, etc.
+        valid_files.sort()  # e.g. E.png < E1.png < E2.png
         return [os.path.join(letters_folder, f) for f in valid_files]
 
     def load_next_variation(char: str):
-        # If we haven't cached variations for this character, do it now
+        """Round-robin through each variation of a character."""
         if char not in variations_cache:
             variations_cache[char] = (get_variations_for_char(char), 0)
 
@@ -111,7 +98,7 @@ def generate_background_image(child_name, config):
             return None
 
         chosen_file = files_list[index]
-        new_index = (index + 1) % len(files_list)  # round-robin
+        new_index = (index + 1) % len(files_list)
         variations_cache[char] = (files_list, new_index)
 
         return Image.open(chosen_file).convert("RGBA")
@@ -123,7 +110,7 @@ def generate_background_image(child_name, config):
         if img:
             images_to_composite.append(img)
         else:
-            print(f"[Warning] No images found for character '{ch}'. Skipping.")
+            print(f"[Warning] No images found for char '{ch}'. Skipping.")
 
     if not images_to_composite:
         print("[Warning] No valid images loaded, skipping generation.")
@@ -137,15 +124,15 @@ def generate_background_image(child_name, config):
 
     # 8) Center horizontally, top aligned
     x_start = (bg_width - total_width) // 2
-    top_y = 0  # Could read from config if desired
+    top_y = 0
 
     current_x = x_start
     for img in images_to_composite:
         background.alpha_composite(img, dest=(current_x, top_y))
         current_x += img.size[0] + letter_spacing
 
-    # 9) Save
-    output_filename = f"Background_{child_name}.png"
+    # 9) Save as "Renoir_<child_name>.png"
+    output_filename = f"Renoir_{child_name}.png"
     output_path = os.path.join(output_folder, output_filename)
     background.save(output_path)
-    print(f"[Info] Generated image saved at: {output_path}")
+    print(f"[Info] Renoir image saved at: {output_path}")

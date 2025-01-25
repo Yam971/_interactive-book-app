@@ -11,14 +11,13 @@
     href="{{ url_for('static', filename='images/whataread-favicon.png') }}" 
     type="image/png"
   >
-
   <!-- Link to the external CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/personalize.css') }}">
 </head>
 <body>
   <!-- Header -->
   <div class="personalize-header">
-    <span class="header-title">{{ child_name }}’s Preview</span>
+    <span class="header-title">{{ child_name }} - Preview</span>
     <button class="header-close" id="close-button">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"/>
@@ -30,9 +29,8 @@
   <div class="personalize-form-section">
     <div class="personalize-form-container">
       <h2 class="step-title" style="font-weight: normal;">Step 2 of 3</h2>
-      <h3 class="subtitle">Let’s see how your book looks</h3>
+      <h3 class="subtitle">Let’s see your results</h3>
 
-      <!-- Display the data -->
       <p class="preview-field"><strong>Child's Name:</strong> {{ child_name }}</p>
       <p class="preview-field"><strong>Gender:</strong> {{ gender }}</p>
       <p class="preview-field"><strong>Character:</strong> {{ character }}</p>
@@ -42,25 +40,32 @@
         <strong>Branch:</strong> {{ branch_version }}
       </p>
 
-      <!-- If Renoir image is generated, show it first -->
-      {% if renoir_filename %}
-        <p class="preview-field">Renoir image:</p>
-        <img 
-          class="generated-preview-img" 
-          src="{{ url_for('serve_preview_image', filename=renoir_filename) }}" 
-          alt="Renoir preview image"
-        >
+      <!-- Renoir Multiple Images (show these first) -->
+      {% if renoir_image_list and renoir_image_list|length > 0 %}
+        <p class="preview-field">Renoir Progressive Images (stacked):</p>
+        {% for filename in renoir_image_list %}
+          <div style="margin-bottom: 20px;">
+            <img 
+              class="generated-preview-img" 
+              src="{{ url_for('serve_preview_image', filename=filename) }}" 
+              alt="Renoir Partial Image"
+            >
+          </div>
+        {% endfor %}
       {% endif %}
 
-      <!-- If Monet image is generated, show it second -->
+      <!-- Monet Single Image (display at the end) -->
       {% if monet_filename %}
-        <p class="preview-field">Monet image:</p>
-        <img 
-          class="generated-preview-img" 
-          src="{{ url_for('serve_preview_image', filename=monet_filename) }}" 
-          alt="Monet preview image"
-        >
+        <p class="preview-field">Monet Image:</p>
+        <div style="margin-bottom: 20px;">
+          <img 
+            class="generated-preview-img" 
+            src="{{ url_for('serve_preview_image', filename=monet_filename) }}" 
+            alt="Monet Preview Image"
+          >
+        </div>
       {% endif %}
+
     </div>
   </div>
 

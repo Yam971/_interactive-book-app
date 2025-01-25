@@ -1,5 +1,4 @@
 {
-  
   "use_new_monet": false,
   "use_renoir": true,
 
@@ -8,7 +7,6 @@
   "renoir_v0_1_module": "renoir_V0_1.Renoir_V0_1",
 
   "paths": {
-    
     "old_background": "monet/assets/girl_type_i/dynamic/final-background-spread/Background.png",
     "old_letters": "monet/assets/girl_type_i/dynamic/transparent-letters/4-letters",
     "old_output": "monet/generated-preview",
@@ -19,8 +17,7 @@
     "letters_small": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters/small",
     "new_output": "monet_V0_8/generated-preview",
 
-    
-    "renoir_background": "renoir_V0_1/assets/girl_type_i/dynamic/background-spreads/Background.png",
+    "renoir_background_dir": "renoir_V0_1/assets/girl_type_i/dynamic/background-spreads",
     "renoir_letters_normal": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters",
     "renoir_letters_small": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters/small",
     "renoir_output": "renoir_V0_1/generated-preview"

@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, send_from_directory
 import os
 import json
+import time
+import psutil
 
 app = Flask(__name__)
 
@@ -32,14 +34,27 @@ def preview():
 
     monet_filename = None
     renoir_image_list = []
+    monet_execution_time = 0.0
+    monet_cpu_usage = 0.0
+    renoir_execution_time = 0.0
+    renoir_cpu_usage = 0.0
 
     if child_name:
-        # 1) Generate Monet’s single overlay
-        monet_generate(child_name, config) 
+        # Generate Monet's image with metrics
+        proc = psutil.Process()
+        proc.cpu_percent(interval=None)  # Initialize CPU measurement
+        start_monet = time.time()
+        monet_generate(child_name, config)
+        monet_execution_time = time.time() - start_monet
+        monet_cpu_usage = proc.cpu_percent(interval=None)
         monet_filename = f"Background_{child_name}.png"
 
-        # 2) Generate Renoir’s progressive images
+        # Generate Renoir's images with metrics
+        proc.cpu_percent(interval=None)  # Reset for Renoir
+        start_renoir = time.time()
         renoir_image_list = renoir_generate(child_name, config)
+        renoir_execution_time = time.time() - start_renoir
+        renoir_cpu_usage = proc.cpu_percent(interval=None)
 
     return render_template(
         'preview.html',
@@ -47,13 +62,14 @@ def preview():
         gender=gender,
         character=character,
         nb_letters=nb_letters,
-        # Monet single image
         monet_filename=monet_filename,
-        # Renoir multiple images
         renoir_image_list=renoir_image_list,
-        # Additional info
         monet_version="Monet & Renoir Combined",
-        branch_version=config.get("branch", "N/A")
+        branch_version=config.get("branch", "N/A"),
+        monet_execution_time=monet_execution_time,
+        monet_cpu_usage=monet_cpu_usage,
+        renoir_execution_time=renoir_execution_time,
+        renoir_cpu_usage=renoir_cpu_usage
     )
 
 @app.route('/preview-image/<filename>')

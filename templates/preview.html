@@ -40,6 +40,12 @@
         <strong>Branch:</strong> {{ branch_version }}
       </p>
 
+      <!-- New Performance Metrics -->
+      <p class="preview-field"><strong>Monet Execution Time:</strong> {{ "%.2f"|format(monet_execution_time) }} seconds</p>
+      <p class="preview-field"><strong>Monet CPU Usage:</strong> {{ "%.1f"|format(monet_cpu_usage) }}%</p>
+      <p class="preview-field"><strong>Renoir Execution Time:</strong> {{ "%.2f"|format(renoir_execution_time) }} seconds</p>
+      <p class="preview-field"><strong>Renoir CPU Usage:</strong> {{ "%.1f"|format(renoir_cpu_usage) }}%</p>
+
       <!-- Renoir Multiple Images (show these first) -->
       {% if renoir_image_list and renoir_image_list|length > 0 %}
         <p class="preview-field">Renoir Progressive Images (stacked):</p>

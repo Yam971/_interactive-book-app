@@ -2,9 +2,6 @@ import os
 import time
 from PIL import Image
 
-print("[DEBUG] Top-level cache_manager.py import check!")
-
-
 # Module-level dictionaries to store cached images
 _renoir_backgrounds = {}
 _renoir_letter_variations = {}
@@ -25,8 +22,7 @@ def init_cache(config):
     into memory, if not already cached.
     Returns a dictionary with stats: how many images, how long it took, etc.
     """
-    # Quick test to confirm that init_cache is actually being called:
-    print("Hello, I am here!")
+    print("Hello, I am here!")  # Confirm function is actually called
 
     global _caching_info
     if _caching_info["is_cached"]:
@@ -58,7 +54,7 @@ def _preload_renoir_assets(config):
     # 1) Renoir backgrounds
     background_dir = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["renoir_background_dir"].replace("renoir_V0_1/", "")
+        config["paths"]["renoir_background_dir"]  # <--- removed .replace()
     )
     print(f"[Debug] Renoir background_dir: {background_dir}")
 
@@ -80,11 +76,11 @@ def _preload_renoir_assets(config):
     # 2) Renoir letter variations (normal + small)
     normal_letters_path = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["renoir_letters_normal"].replace("renoir_V0_1/", "")
+        config["paths"]["renoir_letters_normal"]  # <--- removed .replace()
     )
     small_letters_path = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["renoir_letters_small"].replace("renoir_V0_1/", "")
+        config["paths"]["renoir_letters_small"]   # <--- removed .replace()
     )
 
     print(f"[Debug] Renoir normal_letters_path: {normal_letters_path}")
@@ -108,7 +104,7 @@ def _preload_monet_assets(config):
     # 1) Monet background
     bg_path = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["new_background"].replace("monet_V0_8/", "")
+        config["paths"]["new_background"]  # <--- removed .replace()
     )
     print(f"[Debug] Monet background path: {bg_path}")
 
@@ -125,11 +121,11 @@ def _preload_monet_assets(config):
     # 2) Letters (normal + small)
     normal_letters_path = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["letters_normal"].replace("monet_V0_8/", "")
+        config["paths"]["letters_normal"]  # <--- removed .replace()
     )
     small_letters_path = os.path.join(
         os.path.dirname(__file__),
-        config["paths"]["letters_small"].replace("monet_V0_8/", "")
+        config["paths"]["letters_small"]   # <--- removed .replace()
     )
 
     print(f"[Debug] Monet normal_letters_path: {normal_letters_path}")

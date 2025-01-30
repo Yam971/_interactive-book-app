@@ -4,10 +4,7 @@ import json
 import time
 import psutil
 
-print("[DEBUG] app.py is loaded and running! 1")
-
-
-from cache_manager import init_cache  # <-- the new file we just created
+from cache_manager import init_cache  # The updated file
 
 app = Flask(__name__)
 
@@ -91,13 +88,12 @@ def serve_preview_image(filename):
     full_folder_path = os.path.join(os.path.dirname(__file__), folder)
     return send_from_directory(full_folder_path, filename)
 
-
-# ========== NEW ROUTE for triggering caching & returning info ==========
+# Route for triggering caching & returning info
 @app.route('/init-cache')
 def init_cache_route():
-    caching_info = init_cache(config)  # returns dict with is_cached, total_images, time_seconds
+    caching_info = init_cache(config)
     return jsonify(caching_info)
 
-
 if __name__ == '__main__':
+    print("[Debug] Running app.py directly in debug mode")
     app.run(debug=True)

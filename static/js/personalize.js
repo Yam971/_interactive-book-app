@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Fetch the list of names for autocomplete
-  fetch('/static/data/names.json') // Adjusted for Flask static path
+  fetch('/static/data/names.json')
     .then(response => response.json())
     .then(data => {
       const namesList = data.names;
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function autocomplete(inp, arr) {
     var currentFocus;
 
-    inp.addEventListener("input", function (e) {
+    inp.addEventListener("input", function () {
       var a, b, i, val = this.value;
       closeAllLists();
       if (!val) {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "<strong>" + suggestion.substr(matchIndex, val.length) + "</strong>" +
           suggestion.substr(matchIndex + val.length);
         b.innerHTML += "<input type='hidden' value='" + suggestion + "'>";
-        b.addEventListener("click", function (e) {
+        b.addEventListener("click", function () {
           inp.value = this.getElementsByTagName("input")[0].value;
           closeAllLists();
           validateInput(inp, arr);
@@ -69,18 +69,16 @@ document.addEventListener("DOMContentLoaded", function () {
       var x = document.getElementById(this.id + "autocomplete-list");
       if (x) x = x.getElementsByTagName("div");
 
-      if (e.keyCode == 40) {
+      if (e.keyCode === 40) {
         currentFocus++;
         addActive(x);
-      } else if (e.keyCode == 38) {
+      } else if (e.keyCode === 38) {
         currentFocus--;
         addActive(x);
-      } else if (e.keyCode == 13) {
+      } else if (e.keyCode === 13) {
         e.preventDefault();
-        if (currentFocus > -1) {
-          if (x) {
-            x[currentFocus].click();
-          }
+        if (currentFocus > -1 && x) {
+          x[currentFocus].click();
         }
       }
     });
@@ -102,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeAllLists(elmnt) {
       var x = document.getElementsByClassName("autocomplete-items");
       for (var i = 0; i < x.length; i++) {
-        if (elmnt != x[i] && elmnt != inp) {
+        if (elmnt !== x[i] && elmnt !== inp) {
           if (x[i].parentNode) {
             x[i].parentNode.removeChild(x[i]);
           }
@@ -211,11 +209,20 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = '/preview?' + params.toString();
   });
 
-  // =================================================
-  // NEW: Trigger caching right after the UI is ready.
-  // This way, images preload while the user fills out the form.
-  // =================================================
+  // ==========================================
+  // NEW: Trigger server-side caching + update
+  // the footer when done.
+  // ==========================================
+  const cachingStatusEl = document.getElementById('caching-status');
   fetch('/init-cache')
-    .then(() => console.log('Caching triggered.'))
-    .catch(err => console.warn('Caching error:', err));
+    .then(response => response.json())
+    .then(data => {
+      // data = { is_cached: true, total_images: 48, time_seconds: 1.42, ... }
+      if (data.is_cached) {
+        cachingStatusEl.innerText = `Caching done! ${data.total_images} images loaded in ${data.time_seconds}s.`;
+      }
+    })
+    .catch(err => {
+      console.warn('Caching error:', err);
+    });
 });

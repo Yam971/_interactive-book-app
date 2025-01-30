@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, jsonify
 import os
 import json
 import time
 import psutil
 
-# Import your new caching module
-from cache_manager import init_cache
+print("[DEBUG] app.py is loaded and running! 1")
+
+
+from cache_manager import init_cache  # <-- the new file we just created
 
 app = Flask(__name__)
 
@@ -78,26 +80,24 @@ def preview():
 @app.route('/preview-image/<filename>')
 def serve_preview_image(filename):
     """
-    Serve both Monet and Renoir images from different folders using
+    Serve both Monet and Renoir images from different folders using 
     the same route. We'll guess which folder by the filename.
     """
     if filename.startswith("Renoir_"):
-        folder = config["paths"]["renoir_output"]  # "renoir_V0_1/generated-preview"
+        folder = config["paths"]["renoir_output"]
     else:
-        folder = config["paths"]["new_output"]      # "monet_V0_8/generated-preview"
+        folder = config["paths"]["new_output"]
 
     full_folder_path = os.path.join(os.path.dirname(__file__), folder)
     return send_from_directory(full_folder_path, filename)
 
-# ---------- NEW ROUTE FOR CACHING -----------
+
+# ========== NEW ROUTE for triggering caching & returning info ==========
 @app.route('/init-cache')
 def init_cache_route():
-    """
-    This endpoint is called from client-side JavaScript after Step 1 loads.
-    It triggers the caching of all backgrounds & letter variations.
-    """
-    init_cache(config)  # from cache_manager
-    return "Cache Initialized"
+    caching_info = init_cache(config)  # returns dict with is_cached, total_images, time_seconds
+    return jsonify(caching_info)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

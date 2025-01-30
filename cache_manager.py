@@ -1,55 +1,83 @@
-# cache_manager.py
 import os
+import time
 from PIL import Image
 
-# We'll store these as module-level dictionaries.
+print("[DEBUG] Top-level cache_manager.py import check!")
+
+
+# Module-level dictionaries to store cached images
 _renoir_backgrounds = {}
 _renoir_letter_variations = {}
-_renoir_letter_variation_indexes = {}
 
 _monet_backgrounds = {}
 _monet_letter_variations = {}
-_monet_letter_variation_indexes = {}
 
-# Flag to indicate if we've already done a full init
-_cache_initialized = False
+# Store info about how many images were cached and how long it took
+_caching_info = {
+    "is_cached": False,
+    "total_images": 0,
+    "time_seconds": 0.0
+}
 
 def init_cache(config):
     """
-    Loads all backgrounds and letter images for both Renoir and Monet into memory.
-    If already loaded, this does nothing.
+    Loads all relevant background images & letter images for Renoir (and optionally Monet)
+    into memory, if not already cached.
+    Returns a dictionary with stats: how many images, how long it took, etc.
     """
-    global _cache_initialized
-    if _cache_initialized:
-        print("[Info] Cache already initialized, skipping.")
-        return
+    # Quick test to confirm that init_cache is actually being called:
+    print("Hello, I am here!")
 
-    print("[Info] Initializing cache...")
-    _preload_renoir_assets(config)
-    _preload_monet_assets(config)
-    _cache_initialized = True
-    print("[Info] Cache initialization complete.")
+    global _caching_info
+    if _caching_info["is_cached"]:
+        # Already cached, just return existing info
+        print("[Debug] init_cache called, but cache is already initialized.")
+        return _caching_info
 
+    start_time = time.time()
+    print("[Info] Starting cache initialization...")
+
+    renoir_count = _preload_renoir_assets(config)
+    monet_count = _preload_monet_assets(config)
+
+    end_time = time.time()
+    duration = end_time - start_time
+
+    total_images = renoir_count + monet_count
+    _caching_info["is_cached"] = True
+    _caching_info["total_images"] = total_images
+    _caching_info["time_seconds"] = round(duration, 2)
+
+    print(f"[Info] Caching complete. {total_images} images loaded in {duration:.2f} seconds.")
+    return _caching_info
 
 def _preload_renoir_assets(config):
-    """
-    Load Renoir background images + letter variations into memory.
-    """
-    # 1) Backgrounds
+    """Load Renoir backgrounds and letter variations into memory with debug prints."""
+    count = 0
+
+    # 1) Renoir backgrounds
     background_dir = os.path.join(
         os.path.dirname(__file__),
         config["paths"]["renoir_background_dir"].replace("renoir_V0_1/", "")
     )
-    # We'll try to load all possible background files from that directory
-    for fname in os.listdir(background_dir):
-        if fname.lower().endswith(".png") and fname.startswith("Background"):
-            path = os.path.join(background_dir, fname)
-            try:
-                _renoir_backgrounds[fname] = Image.open(path).convert("RGBA")
-            except Exception as e:
-                print(f"[Warning] Could not open Renoir background {fname}: {e}")
+    print(f"[Debug] Renoir background_dir: {background_dir}")
 
-    # 2) Letters (normal + small)
+    if os.path.exists(background_dir):
+        files_in_bg_dir = os.listdir(background_dir)
+        print(f"[Debug] Files in renoir background_dir: {files_in_bg_dir}")
+        for fname in files_in_bg_dir:
+            if fname.lower().endswith(".png") and fname.startswith("Background"):
+                path = os.path.join(background_dir, fname)
+                try:
+                    _renoir_backgrounds[fname] = Image.open(path).convert("RGBA")
+                    count += 1
+                    print(f"[Debug] Loaded Renoir background: {fname}")
+                except Exception as e:
+                    print(f"[Warning] Could not open Renoir background {fname}: {e}")
+    else:
+        print("[Warning] renoir_background_dir does not exist or is inaccessible.")
+
+    # 2) Renoir letter variations (normal + small)
     normal_letters_path = os.path.join(
         os.path.dirname(__file__),
         config["paths"]["renoir_letters_normal"].replace("renoir_V0_1/", "")
@@ -59,39 +87,40 @@ def _preload_renoir_assets(config):
         config["paths"]["renoir_letters_small"].replace("renoir_V0_1/", "")
     )
 
-    def preload_letter_folder(folder_path, use_small):
-        if not os.path.exists(folder_path):
-            return
-        for fname in os.listdir(folder_path):
-            if not fname.lower().endswith(".png"):
-                continue
-            fullpath = os.path.join(folder_path, fname)
-            try:
-                img = Image.open(fullpath).convert("RGBA")
-                key = (fname, use_small)  # we'll store them by full filename + small flag
-                _renoir_letter_variations[key] = _renoir_letter_variations.get(key, [])
-                _renoir_letter_variations[key].append(img)
-            except Exception as e:
-                print(f"[Warning] Could not open Renoir letter {fname}: {e}")
+    print(f"[Debug] Renoir normal_letters_path: {normal_letters_path}")
+    _debug_preload_letter_folder(normal_letters_path, _renoir_letter_variations, count_label="[Renoir Normal]")
 
-    preload_letter_folder(normal_letters_path, use_small=False)
-    preload_letter_folder(small_letters_path, use_small=True)
+    print(f"[Debug] Renoir small_letters_path: {small_letters_path}")
+    _debug_preload_letter_folder(small_letters_path, _renoir_letter_variations, count_label="[Renoir Small]")
 
+    # Actually load the images and add to count
+    count += _debug_preload_letter_folder(normal_letters_path, _renoir_letter_variations,
+                                          count_label="[Renoir Normal]", do_load=True)
+    count += _debug_preload_letter_folder(small_letters_path, _renoir_letter_variations,
+                                          count_label="[Renoir Small]", do_load=True)
+
+    return count
 
 def _preload_monet_assets(config):
-    """
-    If desired, load Monet background images + letter variations into memory.
-    If you only need Renoir, you can comment this out.
-    """
-    # 1) Background (only a single background for Monet_V0_8 in your code)
+    """Load Monet backgrounds (if desired) and letter variations into memory with debug prints."""
+    count = 0
+
+    # 1) Monet background
     bg_path = os.path.join(
         os.path.dirname(__file__),
         config["paths"]["new_background"].replace("monet_V0_8/", "")
     )
-    try:
-        _monet_backgrounds["Background.png"] = Image.open(bg_path).convert("RGBA")
-    except Exception as e:
-        print(f"[Warning] Could not open Monet background: {e}")
+    print(f"[Debug] Monet background path: {bg_path}")
+
+    if os.path.exists(bg_path):
+        try:
+            _monet_backgrounds["Background.png"] = Image.open(bg_path).convert("RGBA")
+            count += 1
+            print("[Debug] Loaded Monet background: Background.png")
+        except Exception as e:
+            print(f"[Warning] Could not open Monet background: {e}")
+    else:
+        print("[Warning] Monet background path does not exist or is inaccessible.")
 
     # 2) Letters (normal + small)
     normal_letters_path = os.path.join(
@@ -103,20 +132,40 @@ def _preload_monet_assets(config):
         config["paths"]["letters_small"].replace("monet_V0_8/", "")
     )
 
-    def preload_letter_folder(folder_path, use_small):
-        if not os.path.exists(folder_path):
-            return
-        for fname in os.listdir(folder_path):
-            if not fname.lower().endswith(".png"):
-                continue
-            fullpath = os.path.join(folder_path, fname)
-            try:
-                img = Image.open(fullpath).convert("RGBA")
-                key = (fname, use_small)
-                _monet_letter_variations[key] = _monet_letter_variations.get(key, [])
-                _monet_letter_variations[key].append(img)
-            except Exception as e:
-                print(f"[Warning] Could not open Monet letter {fname}: {e}")
+    print(f"[Debug] Monet normal_letters_path: {normal_letters_path}")
+    print(f"[Debug] Monet small_letters_path: {small_letters_path}")
 
-    preload_letter_folder(normal_letters_path, use_small=False)
-    preload_letter_folder(small_letters_path, use_small=True)
+    count += _debug_preload_letter_folder(normal_letters_path, _monet_letter_variations,
+                                          count_label="[Monet Normal]", do_load=True)
+    count += _debug_preload_letter_folder(small_letters_path, _monet_letter_variations,
+                                          count_label="[Monet Small]", do_load=True)
+
+    return count
+
+def _debug_preload_letter_folder(folder_path, variations_dict, count_label="", do_load=False):
+    """
+    Helper function to print debug info about a folder,
+    optionally load .png images into variations_dict.
+    Returns how many images were loaded.
+    """
+    loaded_count = 0
+    if not os.path.exists(folder_path):
+        print(f"{count_label} [Warning] Path does not exist: {folder_path}")
+        return 0
+
+    files_in_folder = os.listdir(folder_path)
+    print(f"{count_label} [Debug] Files in {folder_path}: {files_in_folder}")
+
+    if do_load:
+        for fname in files_in_folder:
+            if fname.lower().endswith(".png"):
+                fullpath = os.path.join(folder_path, fname)
+                try:
+                    img = Image.open(fullpath).convert("RGBA")
+                    variations_dict.setdefault(fname, []).append(img)
+                    loaded_count += 1
+                    print(f"{count_label} [Debug] Loaded letter image: {fname}")
+                except Exception as e:
+                    print(f"{count_label} [Warning] Could not open letter {fname}: {e}")
+
+    return loaded_count

@@ -2,101 +2,159 @@ import os
 import re
 from PIL import Image
 
+# NEW: import the in-memory caches
+from cache_manager import _renoir_backgrounds, _renoir_letter_variations
+
 def generate_progressive_images(child_name, config):
+    """
+    Generates progressive images from step 1..(len(child_name)-1),
+    each partial substring adding one more letter.
+    Fully uses the in-memory data from cache_manager,
+    avoiding disk reads for backgrounds/letters.
+    """
+
     name_length = len(child_name)
     if name_length < 2:
         return []
 
-    def generate_partial_image(substr, step_index):
-        # ========== DYNAMIC BACKGROUND ==========
-        next_char = child_name[step_index].upper() if step_index < len(child_name) else None
-        bg_dir = os.path.join(
-            os.path.dirname(__file__),
-            config["paths"]["renoir_background_dir"].replace("renoir_V0_1/", "")
-        )
-        
-        bg_file = (
-            "Background_hyphen.png" if next_char == '-' else
-            f"Background_{next_char}.png" if next_char else
-            "Background.png"
-        )
-        bg_path = os.path.join(bg_dir, bg_file)
-        
-        if not os.path.exists(bg_path):
-            bg_path = os.path.join(bg_dir, "Background.png")
+    # We'll store the final output filenames in a list
+    results = []
 
-        try:
-            background = Image.open(bg_path).convert("RGBA")
-        except Exception as e:
-            print(f"Background error: {str(e)}")
-            background = Image.new("RGBA", (1200, 800), (255,255,255,0))
+    # 1) Variation index map for round-robin letter usage
+    variation_index_map = {}  # key=(filename), val=current index in that list
+    # But we also need a quick way to find all images that match a certain char + small/normal suffix.
 
-        # ========== CRITICAL ALIGNMENT FIXES ==========
-        substring_len = len(substr)
+    # For backgrounds: we have keys like "Background_A.png", "Background_hyphen.png", etc.
+    # For letters: we have filenames like "A.png", "A_small.png", "hyphen.png", "hyphen_small.png", etc.
+
+    # Let's define a helper to retrieve the correct background from memory
+    def get_background_for_step(next_char):
+        """
+        If next_char is '-', we might do "Background_hyphen.png".
+        Else "Background_<Letter>.png".
+        If not found, fallback to "Background.png".
+        """
+        if next_char == '-':
+            fname = "Background_hyphen.png"
+        else:
+            fname = f"Background_{next_char}.png"
+
+        if fname not in _renoir_backgrounds:
+            # fallback
+            fname = "Background.png"
+
+        # Return a copy so we don't mutate the cached original
+        return _renoir_backgrounds[fname].copy()
+
+    # For letters, we store them in _renoir_letter_variations with keys like "A.png", "A1.png", "A_small.png", etc.
+    # We'll do a function to retrieve the next variation for a given character, given small or not.
+    def get_next_letter_image(char, use_small):
+        # e.g. char='A', use_small=True => we look for filenames that start with "A" and end with "_small.png"
+        # e.g. char='-', we look for "hyphen_small.png", "hyphen1_small.png", etc.
+        base_char = '-' if char == '-' else char.upper()
+        suffix_small = "_small" if use_small else ""
+        # We'll gather all keys in _renoir_letter_variations that match the pattern
+        matching_fnames = []
+        for fname, pil_list in _renoir_letter_variations.items():
+            # example fname="A.png" or "A1_small.png"
+            # check if starts with base_char, ends with suffix_small+".png"
+            if fname.startswith(base_char) and fname.endswith(suffix_small + ".png"):
+                matching_fnames.append(fname)
+
+        # We'll sort the matching filenames so that e.g. "A.png" < "A1.png" < "A2.png", etc.
+        # Typically you do that by extracting digits.
+        def extract_number(f):
+            # remove suffix_small + .png, then see what's left after the base_char
+            # e.g. "A1_small.png" -> remove "_small.png" => "A1"
+            # remove "A" => "1"
+            # If no digits, return 0
+            stripped = f
+            if suffix_small and stripped.endswith(suffix_small + ".png"):
+                stripped = stripped[: -len(suffix_small + ".png")]
+            else:
+                stripped = stripped[:-4]  # remove ".png"
+            # now stripped might be "A1" or "hyphen2" or "A"
+            if stripped.startswith(base_char):
+                stripped = stripped[len(base_char):]  # e.g. "1"
+            return int(stripped) if stripped.isdigit() else 0
+
+        matching_fnames.sort(key=extract_number)
+
+        # Now we combine all images from those filenames in order
+        # e.g. if "A.png" => _renoir_letter_variations["A.png"] might be multiple PIL images
+        combined_images = []
+        for fname in matching_fnames:
+            combined_images.extend(_renoir_letter_variations[fname])
+
+        if not combined_images:
+            return None
+
+        # Round-robin through combined_images
+        key = (base_char, use_small)
+        if key not in variation_index_map:
+            variation_index_map[key] = 0
+
+        idx = variation_index_map[key]
+        chosen_img = combined_images[idx % len(combined_images)]
+        variation_index_map[key] = idx + 1
+
+        return chosen_img.copy()  # copy so we don't mutate the cached original
+
+    # 2) For each step from 1..(name_length-1), build a partial substring image
+    output_folder = os.path.join(
+        os.path.dirname(__file__),
+        config["paths"]["renoir_output"]  # e.g. "renoir_V0_1/generated-preview"
+    )
+    os.makedirs(output_folder, exist_ok=True)
+
+    for step_index in range(1, name_length):
+        substr = child_name[:step_index]
+        # Next char for background logic
+        next_char = child_name[step_index] if step_index < len(child_name) else None
+
+        # a) Get the background for this step
+        bg = get_background_for_step(next_char)
+
+        # b) Determine if we use "small" or "normal" for letters
+        substr_len = len(substr)
+        if 8 <= substr_len <= 12:
+            use_small = True
+        else:
+            use_small = False
+
+        # c) Determine spacing
         spacing = config["letter_spacing_per_length"].get(
-            str(substring_len), 
+            str(substr_len),
             config["default_letter_spacing_px"]
         )
 
-        # Load letter variations
-        letters_folder_key = (
-            "renoir_letters_small" if 8 <= substring_len <= 12 
-            else "renoir_letters_normal"
-        )
-        letters_folder = os.path.join(
-            os.path.dirname(__file__),
-            config["paths"][letters_folder_key].replace("renoir_V0_1/", "")
-        )
+        # d) Build letter images for the substring
+        letter_images = []
+        for ch in substr:
+            letter_img = get_next_letter_image(ch, use_small)
+            if letter_img is not None:
+                letter_images.append(letter_img)
 
-        variations_cache = {}
-        def get_variations(char):
-            base = 'hyphen' if char == '-' else char.upper()
-            suffix = "_small" if 8 <= substring_len <= 12 else ""
-            pattern = re.compile(rf"^{re.escape(base)}(\d+)?{suffix}\.png$")
-            return sorted(
-                [f for f in os.listdir(letters_folder) if pattern.match(f)],
-                key=lambda x: int(x[len(base):-4]) if x[len(base):-4].isdigit() else 0
-            )
+        if not letter_images:
+            # If none found, skip this step
+            continue
 
-        def load_variation(char):
-            if char not in variations_cache:
-                variations_cache[char] = (get_variations(char), 0)
-            files, idx = variations_cache[char]
-            if not files:
-                return None
-            chosen = files[idx % len(files)]
-            variations_cache[char] = (files, idx + 1)
-            return Image.open(os.path.join(letters_folder, chosen)).convert("RGBA")
-
-        # ========== PROPER WIDTH CALCULATION ==========
-        images = [load_variation(c) for c in substr if load_variation(c)]
-        if not images:
-            return None
-
-        # Calculate total width with CORRECT spacing
-        total_letter_width = sum(img.width for img in images)
-        total_spacing = spacing * (len(images) - 1)
+        # e) Composite them horizontally centered
+        total_letter_width = sum(img.width for img in letter_images)
+        total_spacing = spacing * (len(letter_images) - 1)
         total_width = total_letter_width + total_spacing
-
-        # Center alignment
-        x_start = (background.width - total_width) // 2
+        x_start = (bg.width - total_width) // 2
         current_x = x_start
+        top_y = 0
 
-        # Composite letters with consistent spacing
-        for img in images:
-            background.alpha_composite(img, (current_x, 0))
-            current_x += img.width + spacing  # Match spacing used in calculation
+        for img in letter_images:
+            bg.alpha_composite(img, (current_x, top_y))
+            current_x += img.width + spacing
 
-        # Save output
-        output_folder = os.path.join(
-            os.path.dirname(__file__),
-            config["paths"]["renoir_output"].replace("renoir_V0_1/", "")
-        )
-        os.makedirs(output_folder, exist_ok=True)
-        
+        # f) Save
         output_filename = f"Renoir_{child_name}_step{step_index}.png"
-        background.save(os.path.join(output_folder, output_filename))
-        
-        return output_filename
+        out_path = os.path.join(output_folder, output_filename)
+        bg.save(out_path)
+        results.append(output_filename)
 
-    return [generate_partial_image(child_name[:i], i) for i in range(1, name_length) if child_name[:i]]
+    return results

@@ -23,8 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
       a.setAttribute("id", this.id + "autocomplete-list");
       a.setAttribute("class", "autocomplete-items");
       this.parentNode.appendChild(a);
-      var valUpper = val.toUpperCase();
 
+      var valUpper = val.toUpperCase();
       var exactMatches = [];
       var startsWithMatches = [];
       var containsMatches = [];
@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
       for (i = 0; i < arr.length; i++) {
         var name = arr[i];
         var nameUpper = name.toUpperCase();
-
         if (nameUpper === valUpper) {
           exactMatches.push(name);
         } else if (nameUpper.startsWith(valUpper)) {
@@ -50,7 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
         b = document.createElement("DIV");
         var nameUpper = suggestion.toUpperCase();
         var matchIndex = nameUpper.indexOf(valUpper);
-        b.innerHTML = suggestion.substr(0, matchIndex) +
+        b.innerHTML =
+          suggestion.substr(0, matchIndex) +
           "<strong>" + suggestion.substr(matchIndex, val.length) + "</strong>" +
           suggestion.substr(matchIndex + val.length);
         b.innerHTML += "<input type='hidden' value='" + suggestion + "'>";
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Gender Selection Logic
+  // Gender / Character
   const boyButton = document.getElementById('boy');
   const girlButton = document.getElementById('girl');
   const genderInput = document.getElementById('gender-id');
@@ -174,10 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCharacterImages(girlCharacters);
   });
 
-  // Character Selection Logic
   const characterOptions = document.querySelectorAll('.character-option');
   const characterInput = document.getElementById('character-id');
-
   characterOptions.forEach(function (option) {
     option.addEventListener('click', function () {
       characterOptions.forEach(opt => opt.classList.remove('selected'));
@@ -190,7 +188,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById('personalization-form');
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-
     const childName = document.getElementById('child-name').value.trim();
     const gender = document.getElementById('gender-id').value;
     const character = document.getElementById('character-id').value;
@@ -209,17 +206,23 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = '/preview?' + params.toString();
   });
 
-  // ==========================================
-  // NEW: Trigger server-side caching + update
-  // the footer when done.
-  // ==========================================
+  // Show caching status + validation lines
   const cachingStatusEl = document.getElementById('caching-status');
   fetch('/init-cache')
     .then(response => response.json())
     .then(data => {
-      // data = { is_cached: true, total_images: 48, time_seconds: 1.42, ... }
       if (data.is_cached) {
-        cachingStatusEl.innerText = `Caching done! ${data.total_images} images loaded in ${data.time_seconds}s.`;
+        // "Caching done! 192 images loaded in 2.93s."
+        cachingStatusEl.innerHTML =
+          `Caching done! ${data.total_images} images loaded in ${data.time_seconds}s.<br>`;
+
+        // Then the validation lines
+        if (Array.isArray(data.validation_report)) {
+          data.validation_report.forEach(line => {
+            // Insert raw HTML (which may contain <span style="color:red">❌</span>)
+            cachingStatusEl.innerHTML += line + "<br>";
+          });
+        }
       }
     })
     .catch(err => {

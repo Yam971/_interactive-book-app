@@ -15,13 +15,13 @@
 
     "new_letters": "monet_V0_8/assets/girl_type_i/dynamic/transparent-letters", 
     "letters_normal": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters", 
-    "letters_small": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters/small", 
+    "letters_small": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters/Small", 
     
     "new_output": "monet_V0_8/generated-preview",
 
     "renoir_background_dir": "renoir_V0_1/assets/girl_type_i/dynamic/background-spreads",
     "renoir_letters_normal": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters",
-    "renoir_letters_small": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters/small",
+    "renoir_letters_small": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters/Small",
     "renoir_output": "renoir_V0_1/generated-preview"
   },
 

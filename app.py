@@ -4,11 +4,12 @@ import json
 import time
 import psutil
 
-from cache_manager import init_cache  # The updated file
+# Import the cache manager function
+from cache_manager import init_cache
 
 app = Flask(__name__)
 
-# 1) Load config
+# 1) Load configuration from config.json
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.json')
 with open(CONFIG_PATH, 'r') as f:
     config = json.load(f)
@@ -16,6 +17,25 @@ with open(CONFIG_PATH, 'r') as f:
 # 2) Import Monet & Renoir modules
 from monet_V0_8.Monet_V0_8 import generate_background_image as monet_generate
 from renoir_V0_1.Renoir_V0_1 import generate_progressive_images as renoir_generate
+
+# Define our cache initialization function
+def initialize_cache():
+    init_cache(config)
+
+# Register the cache initialization hook using whichever decorator is available
+def register_cache_initialization(app):
+    if hasattr(app, 'before_serving'):
+        # If before_serving exists, use it.
+        app.before_serving(initialize_cache)
+    elif hasattr(app, 'before_first_request'):
+        # Fall back to before_first_request.
+        app.before_first_request(initialize_cache)
+    else:
+        # If neither is available, print a warning.
+        print("Warning: No suitable hook for cache initialization found.")
+
+# Register the hook
+register_cache_initialization(app)
 
 @app.route('/')
 def personalize():
@@ -88,7 +108,7 @@ def serve_preview_image(filename):
     full_folder_path = os.path.join(os.path.dirname(__file__), folder)
     return send_from_directory(full_folder_path, filename)
 
-# Route for triggering caching & returning info
+# Route for triggering caching and returning cache info as JSON
 @app.route('/init-cache')
 def init_cache_route():
     caching_info = init_cache(config)

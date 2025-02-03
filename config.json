@@ -21,7 +21,7 @@
 
     "renoir_background_dir": "renoir_V0_1/assets/girl_type_i/dynamic/background-spreads",
     "renoir_letters_normal": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters",
-    "renoir_letters_small": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters/small",
+    "renoir_letters_small": "renoir_V0_1/assets/girl_type_i/dynamic/transparent-letters/Small",
     "renoir_output": "renoir_V0_1/generated-preview"
   },
 
